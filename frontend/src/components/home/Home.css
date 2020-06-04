@@ -1,0 +1,19 @@
+.home_title {
+    text-align: center;
+    color: blue;
+}
+
+.home_subtitle {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.home_img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home_img img {
+    width: 42%;
+}

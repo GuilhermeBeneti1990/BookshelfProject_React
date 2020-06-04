@@ -1,0 +1,20 @@
+{
+  "books": [
+    {
+      "id": 2,
+      "title": "A Arte de Lavar Pratos",
+      "description": "My Book",
+      "author": "Guilherme Beneti",
+      "createdDate": "02/02/2020",
+      "category": "read",
+      "deleted": ""
+    }
+  ],
+  "categories": [
+    "",
+    "reading",
+    "wantToRead",
+    "read"
+  ],
+  "comments": []
+}
