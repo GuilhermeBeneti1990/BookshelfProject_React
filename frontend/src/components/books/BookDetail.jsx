@@ -23,11 +23,11 @@ const initialState = {
 export default class BookDetail extends Component {
     state = { ...initialState }
 
-    componentWillMount() {
-        axios(baseURL() + "/books/" + this.props.match.params.id).then(resp => {
+    async componentWillMount() {
+        await axios(baseURL() + "/books/" + this.props.match.params.id).then(resp => {
             this.setState({ book: resp.data })
         })
-        axios(baseURL() + "/comments").then(resp => {
+        await axios(baseURL() + "/comments").then(resp => {
             var comments = []
             for(let i = 0; i < resp.data.length; i ++) {
                 if(resp.data[i].parentId == this.state.book.id) {
