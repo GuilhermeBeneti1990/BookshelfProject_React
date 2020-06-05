@@ -1,0 +1,26 @@
+ul {
+    list-style-type: none;
+}
+
+.date {
+    font-size: 70%;
+    color: #1a2f3a;
+}
+
+.comment {
+    color: grey;
+}
+
+.iconButton {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    margin-left: 2%;
+}
+
+.trashButton {
+    color: red;
+}
