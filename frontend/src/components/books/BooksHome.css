@@ -17,3 +17,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: brown;
     cursor: pointer;
 }
+
+.inputBorder {
+    border: 1px solid black;
+    font-weight: 500;
+    color: black;
+}

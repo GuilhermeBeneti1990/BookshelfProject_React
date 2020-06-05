@@ -19,15 +19,6 @@
       "deleted": ""
     },
     {
-      "id": 4,
-      "title": "Book wCategory",
-      "description": "A book that I don't know the category of it",
-      "author": "I don't know",
-      "createdDate": "1970-12-19",
-      "category": "",
-      "deleted": ""
-    },
-    {
       "id": 5,
       "title": "Bodas de Ouro",
       "description": "I invented this book",
@@ -42,7 +33,7 @@
       "description": "Putaria",
       "author": "Not me",
       "createdDate": "2009-09-06",
-      "category": "wantToRead",
+      "category": "",
       "deleted": ""
     },
     {
@@ -51,7 +42,7 @@
       "description": "Dominatrix",
       "author": "Not me again",
       "createdDate": "1990-09-08",
-      "category": "wantToRead",
+      "category": "",
       "deleted": ""
     },
     {
@@ -61,6 +52,24 @@
       "author": "I neet to know",
       "createdDate": "2001-01-01",
       "category": "wantToRead",
+      "deleted": ""
+    },
+    {
+      "id": 9,
+      "title": "Anne with E ",
+      "description": "E means EEEEita Porra",
+      "author": "Anne I guess",
+      "createdDate": "2001-01-01",
+      "category": "wantToRead",
+      "deleted": ""
+    },
+    {
+      "id": 10,
+      "title": "Bodas de Prata",
+      "description": "PQP",
+      "author": "Minha vó",
+      "createdDate": "2002-02-02",
+      "category": "",
       "deleted": ""
     }
   ],

@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Main from '../template/Main'
-import './BooksList.css'
+import BookListWithoutCategory from './BookListWithoutCategory'
+import './BooksHome.css'
 
-import { date, baseURL, showDate, orderAsc, unSort } from '../../util/helper'
+import { date, baseURL, showDate, orderAsc } from '../../util/helper'
 
 const headerProps = {
     icon: 'book',
@@ -19,10 +20,11 @@ const initialState = {
     list: [],
     editing: false,
     orderAsc: false,
-    orderIconClass: 'desc'
+    orderIconClass: 'desc',
+    editingForm: ''
 }
 
-export default class BooksList extends Component {
+export default class BooksHome extends Component {
     state = { ...initialState }
 
     componentWillMount() {
@@ -35,7 +37,7 @@ export default class BooksList extends Component {
     }
 
     clear() {
-        this.setState({ book: initialState.book, editing: false })
+        this.setState({ book: initialState.book, editing: false, editingForm: '' })
     }
 
     save() {
@@ -53,7 +55,11 @@ export default class BooksList extends Component {
                                 Swal.fire({
                                     icon: 'success',
                                     text: 'Book inserted!',
-                                  })
+                                  }).then((result) => {
+                                    if(result.value) {
+                                        window.location.reload(false);
+                                    }
+                                })
                             })
                     } else {
                         Swal.fire({
@@ -94,8 +100,14 @@ export default class BooksList extends Component {
     }
 
     load(book) {
-        this.setState({ book, editing: true })
+        this.setState({ book, editing: true, editingForm: 'inputBorder' })
+        this.topFunction()
     }
+
+    topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      }
 
     remove(book) {
         Swal.fire({
@@ -135,13 +147,13 @@ export default class BooksList extends Component {
                     <div className="col-12 col-md-12 col-lg-4">
                         <div className="form-group">
                             <label>Title</label>
-                            <input type="text" className="form-control" name="title" value={this.state.book.title} onChange={ e => this.updateField(e) } placeholder="Insert the title"/>
+                            <input type="text" className={`form-control ${this.state.editingForm}`} name="title" value={this.state.book.title} onChange={ e => this.updateField(e) } placeholder="Insert the title"/>
                         </div>
                     </div>
                     <div className="col-12 col-md-12 col-lg-8">
                         <div className="form-group">
                             <label>Description</label>
-                            <input type="text" className="form-control" name="description" value={this.state.book.description} onChange={ e => this.updateField(e) } placeholder="Describe this book"/>
+                            <input type="text" className={`form-control ${this.state.editingForm}`} name="description" value={this.state.book.description} onChange={ e => this.updateField(e) } placeholder="Describe this book"/>
                         </div>
                     </div>
                 </div>
@@ -149,19 +161,19 @@ export default class BooksList extends Component {
                     <div className="col-12 col-md-12 col-lg-4">
                         <div className="form-group">
                             <label>Author</label>
-                            <input type="text" className="form-control" name="author" value={this.state.book.author} onChange={ e => this.updateField(e) } placeholder="Who is the author?"/>
+                            <input type="text" className={`form-control ${this.state.editingForm}`} name="author" value={this.state.book.author} onChange={ e => this.updateField(e) } placeholder="Who is the author?"/>
                         </div>
                     </div>
                     <div className="col-12 col-md-12 col-lg-3">
                         <div className="form-group">
                             <label>Publication Date</label>
-                            <input type="text" className="form-control" name="createdDate" value={this.state.book.createdDate} onChange={ e => this.updateField(e) } placeholder="" type="date"/>
+                            <input type="text" className={`form-control ${this.state.editingForm}`} name="createdDate" value={this.state.book.createdDate} onChange={ e => this.updateField(e) } placeholder="" type="date"/>
                         </div>
                     </div>
                     <div className="col-12 col-md-6 col-lg-3">
                         <div className="form-group">
                             <label>Category</label>
-                            <select className="form-control" name="category" onChange={ e => this.updateField(e) } value={this.state.book.category}>
+                            <select className={`form-control ${this.state.editingForm}`} name="category" onChange={ e => this.updateField(e) } value={this.state.book.category}>
                                 {this.state.categories.map((category, index) => <option value={category}>
                                     {category == "reading" ? "Reading" : category == "wantToRead" ? "Want To Read" : category == "read" ? "Read" : ""}
                                 </option>)}
@@ -207,54 +219,15 @@ export default class BooksList extends Component {
         )
     }
 
-    renderTableWithoutCategory() {
-        return(
-            <table className="table table-striped table-hover mt-4">
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th><i onClick={() => this.orderBy()} className={`fa fa-sort-alpha-${this.state.orderIconClass} sortIcon`}></i> Title</th>
-                        <th>Author</th>
-                        <th>Category</th>
-                        <th>Publication Date</th>
-                        <th>Edit</th>
-                        <th>Remove</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.renderRowsWithoutCategory()}
-                </tbody>
-            </table>
-        )
-    }
-
     renderRows() {
         return this.state.list.map(book => {
             if(!book.category == "") {
                 return (
                     <tr key={book.id}>
                         <td>#{book.id}</td>
-                        <td><Link to={"/books/details/" + book.id}><b>{book.title}</b></Link></td>
+                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> <b>{book.title}</b></Link></td>
                         <td>{book.author}</td>
                         <td>{book.category == "reading" ? "Reading" : book.category == "wantToRead" ? "Want To Read" : book.category == "read" ? "Read" : ""}</td>
-                        <td>{showDate(book.createdDate)}</td>
-                        <td><button className="btn btn-info" onClick={ () => this.load(book) }><i className="fa fa-pencil"></i></button></td>
-                        <td> <button className="btn btn-danger ml-2" onClick={ () => this.remove(book) }><i className="fa fa-trash"></i></button></td>
-                    </tr>
-                )
-            }
-        })
-    }
-
-    renderRowsWithoutCategory() {
-        return this.state.list.map(book => {
-            if(book.category == "") {
-                return (
-                    <tr key={book.id}>
-                        <td>#{book.id}</td>
-                        <td><Link to={"/books/details/" + book.id}><b>{book.title}</b></Link></td>
-                        <td>{book.author}</td>
-                        <td><span className="noCategory">Without Category</span></td>
                         <td>{showDate(book.createdDate)}</td>
                         <td><button className="btn btn-info" onClick={ () => this.load(book) }><i className="fa fa-pencil"></i></button></td>
                         <td> <button className="btn btn-danger ml-2" onClick={ () => this.remove(book) }><i className="fa fa-trash"></i></button></td>
@@ -268,12 +241,12 @@ export default class BooksList extends Component {
         return (
             <Main {...headerProps}>
                 {this.renderForm()}
-                <hr/>
-                <h6><b>Books without category</b></h6>
-                {this.renderTableWithoutCategory()}
+                <h6><b>Books with category</b></h6>
+                <BookListWithoutCategory loadFunction={this.load.bind(this)} />
                 <hr/>
                 <h6><b>Books with category</b></h6>
                 {this.renderTable()}
+                <hr/>
             </Main>
         )
     }

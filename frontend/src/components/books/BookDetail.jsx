@@ -100,6 +100,23 @@ export default class BookDetail extends Component {
         })
     }
 
+    renderComments() {
+        return this.state.comments.map((comment, index) => {
+            return ( 
+                <ul key={index}>
+                    <li>
+                        <span className="date"><b>{comment.timestamp}</b></span>
+                        <button className="iconButton trashButton" onClick={ () => this.remove(comment) }><i className="fa fa-trash fa-xs"></i></button><br/>
+                        <i className="fa fa-user"></i> <span><b>{comment.author}</b></span> <br/>
+                        <i className="fa fa-comment-o comment"></i> <span className="comment">{comment.body}</span> 
+                        <button className="iconButton" onClick={ () => this.load(comment) }><i className="fa fa-edit"></i></button><br/>
+                        <hr/>
+                    </li>
+                </ul>
+            )
+        })
+    }
+
     renderForm() {
         return (
             <div className="form">
@@ -131,23 +148,6 @@ export default class BookDetail extends Component {
                 </div>
             </div>
         )
-    }
-
-    renderComments() {
-        return this.state.comments.map((comment, index) => {
-            return ( 
-                <ul key={index}>
-                    <li>
-                        <span className="date"><b>{comment.timestamp}</b></span>
-                        <button className="iconButton trashButton" onClick={ () => this.remove(comment) }><i className="fa fa-trash fa-xs"></i></button><br/>
-                        <i className="fa fa-user"></i> <span><b>{comment.author}</b></span> <br/>
-                        <i className="fa fa-comment-o comment"></i> <span className="comment">{comment.body}</span> 
-                        <button className="iconButton" onClick={ () => this.load(comment) }><i className="fa fa-edit"></i></button><br/>
-                        <hr/>
-                    </li>
-                </ul>
-            )
-        })
     }
 
     render() {
