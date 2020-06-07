@@ -21,8 +21,25 @@ export function showDate(date) {
     return newDate
 }
 
-export function orderAsc(a, b) {
+export function orderBy(a, b) {
     return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0)
     
+}
+
+export function showCategoryFormated(category) {
+    switch(category) {
+        case "read":
+            return "Read"
+            break
+        case "reading":
+            return "Reading"
+            break
+        case "wantToRead":
+            return "Want To Read"
+            break
+        default:
+            return ""
+            break
+    }
 }
 

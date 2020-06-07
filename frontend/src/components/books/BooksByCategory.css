@@ -1,0 +1,15 @@
+.category {
+    font-weight: bold;
+}
+
+.read {
+    color: green;
+}
+
+.reading {
+    color: blue;
+}
+
+.wantToRead {
+    color: orange;
+}

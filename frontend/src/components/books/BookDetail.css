@@ -24,3 +24,9 @@ ul {
 .trashButton {
     color: red;
 }
+
+.noComment {
+    color: grey;
+    font-size: 0.9em;
+    margin-left: 2%;
+}

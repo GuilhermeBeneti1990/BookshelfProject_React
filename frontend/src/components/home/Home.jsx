@@ -5,7 +5,7 @@ import React from 'react'
 import Main from '../template/Main'
 
 export default props =>
-    <Main icon="home" title="Home" subtitle="Welcome">
+    <Main icon="home" subtitle="Home">
         <div className="home_title display-4"><b>Bookshelf</b></div>
         <hr />
         <div className="home_img mb-4">

@@ -10,48 +10,12 @@
       "deleted": ""
     },
     {
-      "id": 3,
-      "title": "A Arte de Lavar Pratos",
-      "description": "My Book",
-      "author": "Guilherme Beneti",
-      "createdDate": "1990-02-02",
-      "category": "read",
-      "deleted": ""
-    },
-    {
       "id": 5,
-      "title": "Bodas de Ouro",
+      "title": "Bodas de Ouro Branco",
       "description": "I invented this book",
       "author": "Me",
       "createdDate": "1990-06-07",
-      "category": "reading",
-      "deleted": ""
-    },
-    {
-      "id": 6,
-      "title": "Coma ou seja comido",
-      "description": "Putaria",
-      "author": "Not me",
-      "createdDate": "2009-09-06",
       "category": "",
-      "deleted": ""
-    },
-    {
-      "id": 7,
-      "title": "Domination",
-      "description": "Dominatrix",
-      "author": "Not me again",
-      "createdDate": "1990-09-08",
-      "category": "",
-      "deleted": ""
-    },
-    {
-      "id": 8,
-      "title": "Bunda Balanga",
-      "description": "La balanga loka de la bunda",
-      "author": "I neet to know",
-      "createdDate": "2001-01-01",
-      "category": "wantToRead",
       "deleted": ""
     },
     {
@@ -70,6 +34,24 @@
       "author": "Minha vó",
       "createdDate": "2002-02-02",
       "category": "",
+      "deleted": ""
+    },
+    {
+      "id": 11,
+      "title": "A Arte de Lavar Pratos",
+      "description": "Um livro legal",
+      "author": "Guilherme Beneti",
+      "createdDate": "2020-02-02",
+      "category": "read",
+      "deleted": ""
+    },
+    {
+      "id": 12,
+      "title": "Quem Mexeu no Meu Queijo",
+      "description": "Livro muito legal",
+      "author": "Nome do autor",
+      "createdDate": "2005-02-02",
+      "category": "read",
       "deleted": ""
     }
   ],
@@ -114,6 +96,43 @@
       "body": "I agree with you Gui! ;)",
       "parentId": 4,
       "id": 5
+    },
+    {
+      "timestamp": "05/06/2020 18:27",
+      "author": "Guilherme Beneti",
+      "body": "Nice one",
+      "parentId": "6",
+      "id": 6
+    },
+    {
+      "timestamp": "05/06/2020 20:15",
+      "author": "Guilherme Beneti",
+      "body": "Esse livro é show de bola demais",
+      "parentId": "12",
+      "id": 8
+    },
+    {
+      "timestamp": "05/06/2020 20:15",
+      "author": "Momoi",
+      "body": "Muito bom mesmo",
+      "parentId": "12",
+      "id": 9
+    },
+    {
+      "timestamp": "07/06/2020 11:53",
+      "author": "",
+      "body": "",
+      "parentId": "11",
+      "id": 10,
+      "deleted": true
+    },
+    {
+      "timestamp": "07/06/2020 11:56",
+      "author": "Mark Hudson",
+      "body": "Nice boy",
+      "parentId": "11",
+      "id": 11,
+      "deleted": true
     }
   ]
 }

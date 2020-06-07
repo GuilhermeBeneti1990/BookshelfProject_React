@@ -4,13 +4,13 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import Main from '../template/Main'
 import BookListWithoutCategory from './BookListWithoutCategory'
+import { showAlert, showCompleteAlert } from '../errorOrSuccess/errorOrSuccess'
 import './BooksHome.css'
 
-import { date, baseURL, showDate, orderAsc } from '../../util/helper'
+import { baseURL, showDate, orderBy, showCategoryFormated } from '../../util/helper'
 
 const headerProps = {
-    icon: 'book',
-    title: 'Lits of Books',
+    icon: 'file-text',
     subtitle: 'List'
 }
 
@@ -52,38 +52,23 @@ export default class BooksHome extends Component {
                             .then(resp => {
                                 const list = this.getUpdatedList(resp.data)
                                 this.setState({ book: initialState.book, list, editing: false })
-                                Swal.fire({
-                                    icon: 'success',
-                                    text: 'Book inserted!',
-                                  }).then((result) => {
+                                showAlert('success', 'Book Updated!').then((result) => {
                                     if(result.value) {
                                         window.location.reload(false);
                                     }
                                 })
                             })
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            text: 'Books date is required!',
-                          })
+                          showAlert("error", "Books date is required!")
                     }
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        text: 'Books author is required!',
-                      })
+                    showAlert("error", "Books author is required!")
                 }
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    text: 'Books description is required!',
-                  })
+                showAlert("error", "Books description is required!")
             }
         } else {
-            Swal.fire({
-                icon: 'error',
-                text: 'Books title is required!',
-              })
+            showAlert("error", "Books title is required!")
         }
     }
 
@@ -110,17 +95,13 @@ export default class BooksHome extends Component {
       }
 
     remove(book) {
-        Swal.fire({
-            icon: 'question',
-            title: 'Are you sure?',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-          }).then((result) => {
+        showCompleteAlert('question', 'Do you want to delete this book?', true, 'Yes', 'No')
+            .then((result) => {
             if(result.value) {
                 axios.delete(`${baseURL()}/books/${book.id}`).then(resp => {
                     const list = this.getUpdatedList(book, false)
                     this.setState({ list })
+                    showAlert('success', 'Book deleted!')
                 })
             } else if(result.dismiss === Swal.DismissReason.cancel) {
                 return
@@ -130,10 +111,10 @@ export default class BooksHome extends Component {
 
     orderBy() {
         if(this.state.orderAsc) {
-            var list = this.state.list.sort(orderAsc)
+            var list = this.state.list.sort(orderBy)
             this.setState({ orderAsc: false, orderIconClass: "desc"})
         } else {
-            var list = this.state.list.sort(orderAsc).reverse()
+            var list = this.state.list.sort(orderBy).reverse()
             this.setState({ orderAsc: true, orderIconClass: "asc" })
         }
         this.setState({ list })
@@ -225,9 +206,9 @@ export default class BooksHome extends Component {
                 return (
                     <tr key={book.id}>
                         <td>#{book.id}</td>
-                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> <b>{book.title}</b></Link></td>
+                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> {book.title}</Link></td>
                         <td>{book.author}</td>
-                        <td>{book.category == "reading" ? "Reading" : book.category == "wantToRead" ? "Want To Read" : book.category == "read" ? "Read" : ""}</td>
+                        <td><a href={`/books/category/${book.category}`}>{showCategoryFormated(book.category)}</a></td>
                         <td>{showDate(book.createdDate)}</td>
                         <td><button className="btn btn-info" onClick={ () => this.load(book) }><i className="fa fa-pencil"></i></button></td>
                         <td> <button className="btn btn-danger ml-2" onClick={ () => this.remove(book) }><i className="fa fa-trash"></i></button></td>

@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import './BooksHome.css'
 
-import { date, baseURL, showDate, orderAsc } from '../../util/helper'
+import { baseURL, showDate, orderBy } from '../../util/helper'
+import { showCompleteAlert } from '../errorOrSuccess/errorOrSuccess'
 
 const initialState = {
     book: {id: '', title: '', description: '', author: '', createdDate: '', category: '', deleted: ''},
@@ -15,7 +17,7 @@ const initialState = {
     orderIconClass: 'desc'
 }
 
-export default class BooksList extends Component {
+export default class BooksListWithoutCategory extends Component {
     state = { ...initialState }
 
     componentWillMount() {
@@ -31,13 +33,8 @@ export default class BooksList extends Component {
     }
 
     remove(book) {
-        Swal.fire({
-            icon: 'question',
-            title: 'Are you sure?',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-          }).then((result) => {
+        showCompleteAlert('question', 'Do you want to delete this book?', true, 'Yes', 'No')
+            .then((result) => {
             if(result.value) {
                 axios.delete(`${baseURL()}/books/${book.id}`).then(resp => {
                     const list = this.getUpdatedList(book, false)
@@ -51,10 +48,10 @@ export default class BooksList extends Component {
 
     orderBy() {
         if(this.state.orderAsc) {
-            var list = this.state.list.sort(orderAsc)
+            var list = this.state.list.sort(orderBy)
             this.setState({ orderAsc: false, orderIconClass: "desc"})
         } else {
-            var list = this.state.list.sort(orderAsc).reverse()
+            var list = this.state.list.sort(orderBy).reverse()
             this.setState({ orderAsc: true, orderIconClass: "asc" })
         }
         this.setState({ list })
@@ -88,7 +85,7 @@ export default class BooksList extends Component {
                 return (
                     <tr key={book.id}>
                         <td>#{book.id}</td>
-                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> <b>{book.title}</b></Link></td>
+                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> {book.title}</Link></td>
                         <td>{book.author}</td>
                         <td><span className="noCategory">Without Category</span></td>
                         <td>{showDate(book.createdDate)}</td>
@@ -105,4 +102,8 @@ export default class BooksList extends Component {
             this.renderTable()
         )
     }
+}
+
+BooksListWithoutCategory.PropTypes = {
+    loadFunction: PropTypes.func
 }

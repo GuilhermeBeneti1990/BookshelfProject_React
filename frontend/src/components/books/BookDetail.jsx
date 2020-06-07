@@ -2,15 +2,16 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import './BookDetail.css'
 import Swal from 'sweetalert2'
-
+import BackComponent from './BackToList'
 import Main from '../template/Main'
 
-import { date, baseURL, showDate } from '../../util/helper'
+import { date, baseURL, showDate, showCategoryFormated } from '../../util/helper'
+import { showAlert, showCompleteAlert } from '../errorOrSuccess/errorOrSuccess'
 
 const headerProps = {
     icon: 'book',
-    title: 'Book Info',
-    subtitle: 'Details'
+    subtitle: 'Details',
+    noComment: ''
 }
 
 const initialState = {
@@ -30,11 +31,15 @@ export default class BookDetail extends Component {
         await axios(baseURL() + "/comments").then(resp => {
             var comments = []
             for(let i = 0; i < resp.data.length; i ++) {
-                if(resp.data[i].parentId == this.state.book.id) {
+                if(resp.data[i].parentId == this.state.book.id && !resp.data[i].deleted) {
                     comments.push(resp.data[i])
                 }
             }
-            this.setState({ comments })
+            if(comments.length >= 1) {
+                this.setState({ comments })
+            } else {
+                this.setState({ noComment: 'No comments, make one' })
+            }
         })
     }
 
@@ -60,7 +65,8 @@ export default class BookDetail extends Component {
                     author: this.state.comment.author,
                     body: this.state.comment.body,
                     parentId: this.props.match.params.id,
-                    id: this.state.comment.id
+                    id: this.state.comment.id,
+                    deleted: false
                 }
                 const method = comment.id ? 'put': 'post'
                 const url = comment.id ? `${baseURL()}/comments/${comment.id}` : baseURL() + "/comments"
@@ -69,30 +75,32 @@ export default class BookDetail extends Component {
                     window.location.reload(false);
                 })
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    text: 'No comment to post, write something!',
-                  })
+                showAlert('error', 'No comment to post, write something.')
             }
         } else {
-            Swal.fire({
-                icon: 'error',
-                text: 'Identify yourself!',
-              })
+            showAlert('error', 'Author name is required!')
         }
     }
 
     remove(comment) {
-        Swal.fire({
-            icon: 'question',
-            title: 'Are you sure?',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-          }).then((result) => {
+        showCompleteAlert('question', 'Do you want to delete this comment?', true, 'Yes', 'No')
+            .then((result) => {
+                const obj = {
+                    timestamp: date(),
+                    author: comment.author,
+                    body: comment.body,
+                    parentId: this.props.match.params.id,
+                    id: comment.id,
+                    deleted: true
+                }
             if(result.value) {
-                axios.delete(`${baseURL()}/comments/${comment.id}`).then(resp => {
-                    window.location.reload(false);
+                axios.put(`${baseURL()}/comments/${comment.id}`, obj).then(resp => {
+                    showAlert('success', 'Comment deleted!')
+                    .then((result) => {
+                        if(result.value) {
+                            window.location.reload(false);
+                        }
+                    })
                 })
             } else if(result.dismiss === Swal.DismissReason.cancel) {
                 return
@@ -104,6 +112,7 @@ export default class BookDetail extends Component {
         return this.state.comments.map((comment, index) => {
             return ( 
                 <ul key={index}>
+                    {!comment.deleted ? 
                     <li>
                         <span className="date"><b>{comment.timestamp}</b></span>
                         <button className="iconButton trashButton" onClick={ () => this.remove(comment) }><i className="fa fa-trash fa-xs"></i></button><br/>
@@ -112,6 +121,7 @@ export default class BookDetail extends Component {
                         <button className="iconButton" onClick={ () => this.load(comment) }><i className="fa fa-edit"></i></button><br/>
                         <hr/>
                     </li>
+                    : <li></li>}
                 </ul>
             )
         })
@@ -163,8 +173,8 @@ export default class BookDetail extends Component {
                         <span> {this.state.book.author}</span>
                     </div>
                     <div className="col-12 col-md-6 col-lg-4">
-                        <label><h6><i className="fa fa-check-square-o"></i> Status:</h6></label>
-                        <span> {this.state.book.category == "reading" ? "Reading" : this.state.book.category == "read" ? "Read" : "Want To Read"}</span>
+                        <label><h6><i className="fa fa-check-square-o"></i> Category:</h6></label>
+                        <span> <a href={`/books/category/${this.state.book.category}`}>{showCategoryFormated(this.state.book.category)}</a></span>
                     </div>
                 </div>
                 <div className="row">
@@ -182,10 +192,12 @@ export default class BookDetail extends Component {
                 <div className="row">
                     <div className="col-12">
                         <label><h6><i className="fa fa-comments"></i> Comments:</h6></label>
+                        <p className="noComment">{this.state.noComment}</p>
                         {this.renderComments()}
                     </div>
                 </div>
                 {this.renderForm()}
+                <BackComponent />
             </Main>
         )
     }
