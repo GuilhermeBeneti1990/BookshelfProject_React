@@ -2,12 +2,16 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import Main from '../template/Main'
-import BookListWithoutCategory from './BookListWithoutCategory'
-import { showAlert, showCompleteAlert } from '../errorOrSuccess/errorOrSuccess'
-import './BooksHome.css'
+import Main from '../../template/Main'
+import BookListWithoutCategory from '../listWithoutCategory/BookListWithoutCategory'
+import { showAlert, showCompleteAlert } from '../../errorOrSuccess/errorOrSuccess'
+import './BooksList.css'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { setBook, setListOfBook, setListOfBookWithoutCategory, setEditing, setEditingFomrClass, setCategories } from '../../../actions/index'
 
-import { date, baseURL, showDate, orderBy, showCategoryFormated } from '../../util/helper'
+import { date, baseURL, orderBy, showCategoryFormated, goToTop } from '../../../util/helper'
+import BookForm from '../form/BookForm'
 
 const headerProps = {
     icon: 'file-text',
@@ -16,33 +20,25 @@ const headerProps = {
 
 const initialState = {
     book: {id: '', title: '', description: '', author: '', createdDate: '', category: '', deleted: false},
-    categories: [],
-    list: [],
-    listWithoutCategory: [],
-    editing: false,
     orderAsc: false,
-    orderIconClass: 'desc',
-    editingForm: ''
+    orderIconClass: 'desc'
 }
 
-export default class BooksHome extends Component {
+class BooksList extends Component {
     state = { ...initialState }
 
-    componentWillMount() {
-        axios(baseURL() + "/books").then(resp => {
-            this.setState({ list: resp.data, listWithoutCategory: resp.data.filter(b => b.category == "") })
+    async componentWillMount() {
+        await axios(baseURL() + "/books").then(resp => {
+            this.props.setListOfBook(resp.data)
+            this.props.setListOfBookWithoutCategory(resp.data.filter(b => b.category == ""))
         })
-        axios(baseURL() + "/categories").then(resp => {
-            this.setState({ categories: resp.data })
+        await axios(baseURL() + "/categories").then(resp => {
+            this.props.setCategories(resp.data)
         })
     }
 
-    clear() {
-        this.setState({ book: initialState.book, editing: false, editingForm: '' })
-    }
-
-    save() {
-        const book = this.state.book
+    async save() {
+        const book = this.props.book
         if(!book.title == "") {
             if(!book.description == "") {
                 if(!book.author == "") {
@@ -50,7 +46,7 @@ export default class BooksHome extends Component {
                         const method = book.id ? 'put' : 'post'
                         const methodResultString = book.id ? 'Book Updated' : 'Book Created'
                         const url = book.id ? `${baseURL()}/books/${book.id}` : baseURL() + "/books"
-                        axios[method](url, book)
+                        await axios[method](url, book)
                             .then(resp => {
                                 const list = this.getUpdatedList(resp.data)
                                 this.setState({ book: initialState.book, list, editing: false })
@@ -75,25 +71,16 @@ export default class BooksHome extends Component {
     }
 
     getUpdatedList(book, add = true) {
-        const list = this.state.list.filter(b => b.id !== book.id)
+        const list = this.props.list.filter(b => b.id !== book.id)
         if(add) list.unshift(book)
         return list
     }
 
-    updateField(event) {
-        const book = { ...this.state.book }
-        book[event.target.name] = event.target.value
-        this.setState({ book })
-    }
-
     load(book) {
-        this.setState({ book, editing: true, editingForm: 'inputBorder' })
-        this.topFunction()
-    }
-
-    topFunction() {
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        this.props.setBook(book)
+        this.props.setEditing(true)
+        this.props.setEditingFomrClass('inputBorder')
+        goToTop()
     }
 
     remove(book) {
@@ -124,7 +111,7 @@ export default class BooksHome extends Component {
                     title: book.title,
                     description: book.description,
                     author: book.author,
-                    createdDate: book.createdDate,
+                    timestamp: date(),
                     category: book.category,
                     deleted: true
                 }
@@ -141,82 +128,19 @@ export default class BooksHome extends Component {
 
     orderBy() {
         if(this.state.orderAsc) {
-            var list = this.state.list.sort(orderBy)
+            var list = this.props.list.sort(orderBy)
             this.setState({ orderAsc: false, orderIconClass: "desc"})
         } else {
-            var list = this.state.list.sort(orderBy).reverse()
+            var list = this.props.list.sort(orderBy).reverse()
             this.setState({ orderAsc: true, orderIconClass: "asc" })
         }
-        this.setState({ list })
+        this.props.setListOfBook(list)
 
-    }
-
-    renderForm() {
-        return (
-            <React.Fragment>
-                <h5>{!this.state.editing ? "Register a book" : "Editing a book"}</h5>
-                <div className="form">
-                <div className="row">
-                    <div className="col-12 col-md-12 col-lg-4">
-                        <div className="form-group">
-                            <label>Title</label>
-                            <input type="text" className={`form-control ${this.state.editingForm}`} name="title" value={this.state.book.title} onChange={ e => this.updateField(e) } placeholder="Insert the title"/>
-                        </div>
-                    </div>
-                    <div className="col-12 col-md-12 col-lg-8">
-                        <div className="form-group">
-                            <label>Description</label>
-                            <input type="text" className={`form-control ${this.state.editingForm}`} name="description" value={this.state.book.description} onChange={ e => this.updateField(e) } placeholder="Describe this book"/>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12 col-md-12 col-lg-4">
-                        <div className="form-group">
-                            <label>Author</label>
-                            <input type="text" className={`form-control ${this.state.editingForm}`} name="author" value={this.state.book.author} onChange={ e => this.updateField(e) } placeholder="Who is the author?"/>
-                        </div>
-                    </div>
-                    <div className="col-12 col-md-12 col-lg-3">
-                        <div className="form-group">
-                            <label>Publication Date</label>
-                            <input type="text" className={`form-control ${this.state.editingForm}`} name="createdDate" value={this.state.book.createdDate} onChange={ e => this.updateField(e) } placeholder="" type="date"/>
-                        </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-lg-3">
-                        <div className="form-group">
-                            <label>Category</label>
-                            <select className={`form-control ${this.state.editingForm}`} name="category" onChange={ e => this.updateField(e) } value={this.state.book.category}>
-                                {this.state.categories.map((category, index) => <option value={category}>
-                                    {category == "reading" ? "Reading" : category == "wantToRead" ? "Want To Read" : category == "read" ? "Read" : ""}
-                                </option>)}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-12 d-flex justify-content-end">
-                        <button className="btn btn-info" onClick={ e => this.save(e) }>
-                            Save
-                        </button>
-                        {this.state.editing ?
-                            <button className="btn btn-danger ml-2" onClick={ e => this.clear(e) }>
-                                Cancel
-                            </button>
-                        : <div></div> }
-                    </div>
-                </div>
-            </div>
-            {this.state.list.filter(b => !b.deleted).length == 0 ?
-            <div><span className="noBooks">No books where founded in our database, fill the form and register a new one!</span></div>
-            :<div></div>}
-            </React.Fragment>
-        )
     }
 
     renderTable() {
-        const list = this.state.list.filter(b => b.category != "" && !b.deleted)
+        console.log(this.props)
+        const list = this.props.list.filter(b => b.category != "" && !b.deleted)
         if(list.length > 0) {
             return(
                 <React.Fragment>
@@ -228,7 +152,6 @@ export default class BooksHome extends Component {
                                 <th><i onClick={() => this.orderBy()} className={`fa fa-sort-alpha-${this.state.orderIconClass} sortIcon`}></i> Title</th>
                                 <th>Author</th>
                                 <th>Category</th>
-                                <th>Publication Date</th>
                                 <th>Edit</th>
                                 <th>Remove</th>
                             </tr>
@@ -249,7 +172,7 @@ export default class BooksHome extends Component {
     }
 
     renderRows() {
-        return this.state.list.map(book => {
+        return this.props.list.map(book => {
             if(!book.category == "" && book.deleted == false) {
                 return (
                     <tr key={book.id}>
@@ -257,7 +180,6 @@ export default class BooksHome extends Component {
                         <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> {book.title}</Link></td>
                         <td>{book.author}</td>
                         <td><a href={`/books/category/${book.category}`}>{showCategoryFormated(book.category)}</a></td>
-                        <td>{showDate(book.createdDate)}</td>
                         <td><button className="btn btn-info" onClick={ () => this.load(book) }><i className="fa fa-pencil"></i></button></td>
                         <td> <button className="btn btn-danger ml-2" onClick={ () => this.remove(book) }><i className="fa fa-trash"></i></button></td>
                     </tr>
@@ -269,11 +191,31 @@ export default class BooksHome extends Component {
     render() {
         return (
             <Main {...headerProps}>
-                {this.renderForm()}
-                <BookListWithoutCategory loadFunction={this.load.bind(this)} list={this.state.listWithoutCategory} />
+                <BookForm />
+                <BookListWithoutCategory
+                    loadFunction={this.load.bind(this)}
+                    list={this.props.listWithoutCategory}
+                    removeFunction={this.remove.bind(this)}
+                    />
                 <hr/>
                 {this.renderTable()}
             </Main>
         )
     }
 }
+
+const mapStateToProps = store => ({ 
+    book: store.bookState.book,
+    list: store.bookState.listOfBooks,
+    listWithoutCategory: store.bookState.listOfBookWithoutCategory,
+    categories: store.categoryState.categories
+})
+const mapDispatchToProps = dispatch => bindActionCreators({
+    setBook,
+    setListOfBook,
+    setListOfBookWithoutCategory,
+    setEditing,
+    setEditingFomrClass,
+    setCategories }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(BooksList)

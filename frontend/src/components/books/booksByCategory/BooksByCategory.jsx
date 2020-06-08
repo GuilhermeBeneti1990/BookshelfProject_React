@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import './BooksByCategory.css'
-import Main from '../template/Main'
+import Main from '../../template/Main'
 import axios from 'axios'
-import BackComponent from './BackToList'
-import { baseURL, showCategoryFormated } from '../../util/helper'
+import BackComponent from '../BackToList'
+import { baseURL, showCategoryFormated } from '../../../util/helper'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { setListOfBook } from '../../../actions/index'
 
 const headerProps = {
     icon: 'bookmark',
@@ -12,13 +15,10 @@ const headerProps = {
 }
 
 const initialState = {
-    list: [],
-    orderAsc: false,
-    orderIconClass: 'desc',
     categoryColor: ''
 }
 
-export default class BooksByCategory extends Component {
+class BooksByCategory extends Component {
     state = { ...initialState }
 
     componentWillMount() {
@@ -29,7 +29,7 @@ export default class BooksByCategory extends Component {
                     newList.push(book)
                 }
             })
-            this.setState({ list: newList })
+            this.props.setListOfBook(newList)
         })
         this.showColorCategory(this.props.match.params.id)
     }
@@ -52,7 +52,7 @@ export default class BooksByCategory extends Component {
     }
 
     renderListOfBooks() {
-        return this.state.list.map((book, index) => {
+        return this.props.list.map((book, index) => {
             return ( 
                 <ul key={index}>
                     <li>
@@ -77,3 +77,11 @@ export default class BooksByCategory extends Component {
         )
     }
 }
+
+const mapStateToProps = store => ({ 
+    list: store.bookState.listOfBooks,
+})
+const mapDispatchToProps = dispatch => bindActionCreators({
+    setListOfBook }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(BooksByCategory)
