@@ -19,3 +19,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-weight: 500;
     color: black;
 }
+
+.noBooks {
+    color: grey;
+    font-style: italic;
+    font-size: 1.1em;
+}

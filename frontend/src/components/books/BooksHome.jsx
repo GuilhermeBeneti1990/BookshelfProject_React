@@ -7,7 +7,7 @@ import BookListWithoutCategory from './BookListWithoutCategory'
 import { showAlert, showCompleteAlert } from '../errorOrSuccess/errorOrSuccess'
 import './BooksHome.css'
 
-import { baseURL, showDate, orderBy, showCategoryFormated } from '../../util/helper'
+import { date, baseURL, showDate, orderBy, showCategoryFormated } from '../../util/helper'
 
 const headerProps = {
     icon: 'file-text',
@@ -15,9 +15,10 @@ const headerProps = {
 }
 
 const initialState = {
-    book: {id: '', title: '', description: '', author: '', createdDate: '', category: '', deleted: ''},
+    book: {id: '', title: '', description: '', author: '', createdDate: '', category: '', deleted: false},
     categories: [],
     list: [],
+    listWithoutCategory: [],
     editing: false,
     orderAsc: false,
     orderIconClass: 'desc',
@@ -29,7 +30,7 @@ export default class BooksHome extends Component {
 
     componentWillMount() {
         axios(baseURL() + "/books").then(resp => {
-            this.setState({ list: resp.data })
+            this.setState({ list: resp.data, listWithoutCategory: resp.data.filter(b => b.category == "") })
         })
         axios(baseURL() + "/categories").then(resp => {
             this.setState({ categories: resp.data })
@@ -47,12 +48,13 @@ export default class BooksHome extends Component {
                 if(!book.author == "") {
                     if(!book.createdDate =="") {
                         const method = book.id ? 'put' : 'post'
+                        const methodResultString = book.id ? 'Book Updated' : 'Book Created'
                         const url = book.id ? `${baseURL()}/books/${book.id}` : baseURL() + "/books"
                         axios[method](url, book)
                             .then(resp => {
                                 const list = this.getUpdatedList(resp.data)
                                 this.setState({ book: initialState.book, list, editing: false })
-                                showAlert('success', 'Book Updated!').then((result) => {
+                                showAlert('success', methodResultString).then((result) => {
                                     if(result.value) {
                                         window.location.reload(false);
                                     }
@@ -92,16 +94,44 @@ export default class BooksHome extends Component {
     topFunction() {
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-      }
+    }
 
     remove(book) {
         showCompleteAlert('question', 'Do you want to delete this book?', true, 'Yes', 'No')
             .then((result) => {
             if(result.value) {
-                axios.delete(`${baseURL()}/books/${book.id}`).then(resp => {
+                //When a book is deleted, all your comments also will receive the flag deleted: false
+                axios(baseURL() + "/comments").then(resp => {
+                    for(let i = 0; i < resp.data.length; i ++) {
+                        if(resp.data[i].parentId == book.id) {
+                            const comment = {
+                                timestamp: date(),
+                                author:resp.data[i].author,
+                                body: resp.data[i].body,
+                                parentId: resp.data[i].parentId,
+                                id: resp.data[i].id,
+                                deleted: true
+                            }
+                            axios['put'](`${baseURL()}/comments/${comment.id}`, comment)
+                            .then(resp => {
+                                window.location.reload(false);
+                            })
+                        }
+                    }
+                })
+                const obj = {
+                    id: book.id,
+                    title: book.title,
+                    description: book.description,
+                    author: book.author,
+                    createdDate: book.createdDate,
+                    category: book.category,
+                    deleted: true
+                }
+                axios.put(`${baseURL()}/books/${book.id}`, obj).then(resp => {
                     const list = this.getUpdatedList(book, false)
                     this.setState({ list })
-                    showAlert('success', 'Book deleted!')
+                    window.location.reload(false);
                 })
             } else if(result.dismiss === Swal.DismissReason.cancel) {
                 return
@@ -123,7 +153,9 @@ export default class BooksHome extends Component {
 
     renderForm() {
         return (
-            <div className="form">
+            <React.Fragment>
+                <h5>{!this.state.editing ? "Register a book" : "Editing a book"}</h5>
+                <div className="form">
                 <div className="row">
                     <div className="col-12 col-md-12 col-lg-4">
                         <div className="form-group">
@@ -176,33 +208,49 @@ export default class BooksHome extends Component {
                     </div>
                 </div>
             </div>
+            {this.state.list.filter(b => !b.deleted).length == 0 ?
+            <div><span className="noBooks">No books where founded in our database, fill the form and register a new one!</span></div>
+            :<div></div>}
+            </React.Fragment>
         )
     }
 
     renderTable() {
-        return(
-            <table className="table table-striped table-hover mt-4">
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th><i onClick={() => this.orderBy()} className={`fa fa-sort-alpha-${this.state.orderIconClass} sortIcon`}></i> Title</th>
-                        <th>Author</th>
-                        <th>Category</th>
-                        <th>Publication Date</th>
-                        <th>Edit</th>
-                        <th>Remove</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.renderRows()}
-                </tbody>
-            </table>
-        )
+        const list = this.state.list.filter(b => b.category != "" && !b.deleted)
+        if(list.length > 0) {
+            return(
+                <React.Fragment>
+                    <h6><b>Books with category</b></h6>
+                    <table className="table table-striped table-hover mt-4">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th><i onClick={() => this.orderBy()} className={`fa fa-sort-alpha-${this.state.orderIconClass} sortIcon`}></i> Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Publication Date</th>
+                                <th>Edit</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.renderRows()}
+                        </tbody>
+                    </table>
+                    <hr/>
+                </React.Fragment>
+            )
+        } else {
+            return (
+                <div>
+                </div>
+            )
+        }
     }
 
     renderRows() {
         return this.state.list.map(book => {
-            if(!book.category == "") {
+            if(!book.category == "" && book.deleted == false) {
                 return (
                     <tr key={book.id}>
                         <td>#{book.id}</td>
@@ -222,12 +270,9 @@ export default class BooksHome extends Component {
         return (
             <Main {...headerProps}>
                 {this.renderForm()}
-                <h6><b>Books with category</b></h6>
-                <BookListWithoutCategory loadFunction={this.load.bind(this)} />
+                <BookListWithoutCategory loadFunction={this.load.bind(this)} list={this.state.listWithoutCategory} />
                 <hr/>
-                <h6><b>Books with category</b></h6>
                 {this.renderTable()}
-                <hr/>
             </Main>
         )
     }

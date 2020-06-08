@@ -15,9 +15,9 @@ const headerProps = {
 }
 
 const initialState = {
-    book: {id: '', title: '', description: '', author: '', createdDate: '', category: '', deleted: ''},
+    book: {id: '', title: '', description: '', author: '', createdDate: '', category: '', deleted: false},
     comments: [],
-    comment: {id: '', author: '', body: ''},
+    comment: {id: '', author: '', body: '', timestamp: '', deleted: false},
     editing: false
 }
 

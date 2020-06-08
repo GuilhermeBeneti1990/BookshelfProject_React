@@ -1,58 +1,22 @@
 {
   "books": [
     {
-      "id": 2,
-      "title": "A Sutil Arte de Ligar o Foda-se",
-      "description": "A really funny book and very good",
-      "author": "Mark Hudson",
-      "createdDate": "1990-06-07",
-      "category": "reading",
-      "deleted": ""
-    },
-    {
-      "id": 5,
-      "title": "Bodas de Ouro Branco",
-      "description": "I invented this book",
-      "author": "Me",
-      "createdDate": "1990-06-07",
-      "category": "",
-      "deleted": ""
-    },
-    {
-      "id": 9,
-      "title": "Anne with E ",
-      "description": "E means EEEEita Porra",
-      "author": "Anne I guess",
-      "createdDate": "2001-01-01",
-      "category": "wantToRead",
-      "deleted": ""
-    },
-    {
-      "id": 10,
-      "title": "Bodas de Prata",
-      "description": "PQP",
-      "author": "Minha vó",
-      "createdDate": "2002-02-02",
-      "category": "",
-      "deleted": ""
-    },
-    {
-      "id": 11,
+      "id": 1,
       "title": "A Arte de Lavar Pratos",
-      "description": "Um livro legal",
+      "description": "My Book",
       "author": "Guilherme Beneti",
       "createdDate": "2020-02-02",
       "category": "read",
-      "deleted": ""
+      "deleted": true
     },
     {
-      "id": 12,
-      "title": "Quem Mexeu no Meu Queijo",
-      "description": "Livro muito legal",
-      "author": "Nome do autor",
-      "createdDate": "2005-02-02",
-      "category": "read",
-      "deleted": ""
+      "id": 2,
+      "title": "A Sutil Arte de Ligar o Foda-se",
+      "description": "A really funny book and very good one",
+      "author": "Mark Hudson",
+      "createdDate": "2002-02-02",
+      "category": "",
+      "deleted": true
     }
   ],
   "categories": [
@@ -63,75 +27,19 @@
   ],
   "comments": [
     {
-      "timestamp": "04/06/2020 17:17",
-      "author": "Teste",
-      "body": "teste",
+      "timestamp": "07/06/2020 21:36",
+      "author": "Guilherme Beneti",
+      "body": "My Book",
       "parentId": "1",
-      "id": 1
-    },
-    {
-      "timestamp": "04/06/2020 17:19",
-      "author": "Teste 2",
-      "body": "Teste testando testado",
-      "parentId": "1",
-      "id": 2
-    },
-    {
-      "timestamp": "05/06/2020 11:1",
-      "author": "Guilherme Beneti",
-      "body": "My book is bueno!",
-      "parentId": "3",
-      "id": 3
-    },
-    {
-      "timestamp": "05/06/2020 12:11",
-      "author": "Lara Croft ",
-      "body": "I agree with you Gui! ;)",
-      "parentId": "3",
-      "id": 4
-    },
-    {
-      "timestamp": "05/06/2020 12:0",
-      "author": "Lara Croft 2",
-      "body": "I agree with you Gui! ;)",
-      "parentId": 4,
-      "id": 5
-    },
-    {
-      "timestamp": "05/06/2020 18:27",
-      "author": "Guilherme Beneti",
-      "body": "Nice one",
-      "parentId": "6",
-      "id": 6
-    },
-    {
-      "timestamp": "05/06/2020 20:15",
-      "author": "Guilherme Beneti",
-      "body": "Esse livro é show de bola demais",
-      "parentId": "12",
-      "id": 8
-    },
-    {
-      "timestamp": "05/06/2020 20:15",
-      "author": "Momoi",
-      "body": "Muito bom mesmo",
-      "parentId": "12",
-      "id": 9
-    },
-    {
-      "timestamp": "07/06/2020 11:53",
-      "author": "",
-      "body": "",
-      "parentId": "11",
-      "id": 10,
+      "id": 1,
       "deleted": true
     },
     {
-      "timestamp": "07/06/2020 11:56",
+      "timestamp": "07/06/2020 21:37",
       "author": "Mark Hudson",
-      "body": "Nice boy",
-      "parentId": "11",
-      "id": 11,
+      "body": "It's my book bitch",
+      "parentId": "2",
+      "id": 2,
       "deleted": true
     }
   ]
