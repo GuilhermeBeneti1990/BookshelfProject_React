@@ -1,41 +1,6 @@
 {
   "books": [
-    {
-      "id": 1,
-      "title": "A Arte de Lavar Pratos",
-      "description": "My Book",
-      "author": "Guilherme Beneti",
-      "timestamp": "08/06/2020 11:3",
-      "category": "read",
-      "deleted": false
-    },
-    {
-      "id": 2,
-      "title": "A Sutil Arte de Ligar o Foda-se",
-      "description": "A really funny book and very good one",
-      "author": "Mark Hudson",
-      "timestamp": "08/06/2020 11:4",
-      "category": "",
-      "deleted": false
-    },
-    {
-      "id": 3,
-      "title": "BBzinho Branco",
-      "description": "teste",
-      "author": "Teste",
-      "timestamp": "",
-      "category": "",
-      "deleted": false
-    },
-    {
-      "id": 4,
-      "title": "Bodas de Ouro",
-      "description": "I invented this book",
-      "author": "I don't know",
-      "timestamp": "",
-      "category": "wantToRead",
-      "deleted": false
-    }
+    
   ],
   "categories": [
     "",
@@ -44,45 +9,6 @@
     "read"
   ],
   "comments": [
-    {
-      "timestamp": "08/06/2020 11:3",
-      "author": "Guilherme Beneti",
-      "body": "Nice one",
-      "parentId": "1",
-      "id": 1,
-      "deleted": true
-    },
-    {
-      "timestamp": "08/06/2020 11:4",
-      "author": "Guilherme Beneti",
-      "body": "oleaiaiaiaia",
-      "parentId": "2",
-      "id": 2,
-      "deleted": true
-    },
-    {
-      "timestamp": "08/06/2020 11:3",
-      "author": "Guilherme Beneti",
-      "body": "Niiiice",
-      "parentId": "1",
-      "id": 3,
-      "deleted": true
-    },
-    {
-      "timestamp": "08/06/2020 11:23",
-      "author": "Teste",
-      "body": "testando",
-      "parentId": "2",
-      "id": 4,
-      "deleted": true
-    },
-    {
-      "timestamp": "08/06/2020 11:40",
-      "author": "Te",
-      "body": "teste",
-      "parentId": "2",
-      "id": 5,
-      "deleted": true
-    }
+    
   ]
 }
