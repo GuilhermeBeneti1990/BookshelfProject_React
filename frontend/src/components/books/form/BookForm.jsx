@@ -121,7 +121,7 @@ class BookForm extends Component {
                 </div>
             </div>
             {this.props.list.filter(b => !b.deleted).length == 0 ?
-            <div><span className="noBooks">No books where founded in our database, fill the form and register a new one!</span></div>
+            <div><span className="noBooks">No books where found in our database, fill the form and register a new one!</span></div>
             :<div></div>}
             </React.Fragment>
         )
