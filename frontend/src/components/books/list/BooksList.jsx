@@ -177,9 +177,9 @@ class BooksList extends Component {
                 return (
                     <tr key={book.id}>
                         <td>#{book.id}</td>
-                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> {book.title}</Link></td>
+                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book colorBrown"></i> <span className="colorBrown">{book.title}</span></Link></td>
                         <td>{book.author}</td>
-                        <td><a href={`/books/category/${book.category}`}>{showCategoryFormated(book.category)}</a></td>
+                        <td><a className="colorBrown" href={`/books/category/${book.category}`}>{showCategoryFormated(book.category)}</a></td>
                         <td><button className="btn btn-info" onClick={ () => this.load(book) }><i className="fa fa-pencil"></i></button></td>
                         <td> <button className="btn btn-danger ml-2" onClick={ () => this.remove(book) }><i className="fa fa-trash"></i></button></td>
                     </tr>

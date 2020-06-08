@@ -20,6 +20,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: black;
 }
 
+.colorBrown {
+    color: brown;
+}
+
 .noBooks {
     color: grey;
     font-style: italic;

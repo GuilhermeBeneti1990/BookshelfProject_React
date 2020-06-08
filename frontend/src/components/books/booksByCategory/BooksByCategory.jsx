@@ -56,7 +56,7 @@ class BooksByCategory extends Component {
             return ( 
                 <ul key={index}>
                     <li>
-                        <h6><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> {book.title}</Link></h6>
+                        <h6><Link to={"/books/details/" + book.id}><i className="fa fa-book bookName"></i> <span className="bookName">{book.title}</span></Link></h6>
                     </li>
                     <li>
                         <span><b>Author: </b></span>{book.author}

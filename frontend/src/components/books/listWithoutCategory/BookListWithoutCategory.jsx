@@ -69,7 +69,7 @@ export default class BooksListWithoutCategory extends Component {
                 return (
                     <tr key={book.id}>
                         <td>#{book.id}</td>
-                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book"></i> {book.title}</Link></td>
+                        <td><Link to={"/books/details/" + book.id}><i className="fa fa-book bookName"></i> <span className="bookName">{book.title}</span></Link></td>
                         <td>{book.author}</td>
                         <td><span className="noCategory">Without Category</span></td>
                         <td><button className="btn btn-info" onClick={() => this.props.loadFunction(book)}><i className="fa fa-pencil"></i></button></td>
