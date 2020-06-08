@@ -73,7 +73,7 @@ export default class BooksListWithoutCategory extends Component {
                         <td>{book.author}</td>
                         <td><span className="noCategory">Without Category</span></td>
                         <td><button className="btn btn-info" onClick={() => this.props.loadFunction(book)}><i className="fa fa-pencil"></i></button></td>
-                        <td> <button className="btn btn-danger ml-2" onClick={ () => this.removeFunction(book) }><i className="fa fa-trash"></i></button></td>
+                        <td> <button className="btn btn-danger ml-2" onClick={ () => this.props.removeFunction(book) }><i className="fa fa-trash"></i></button></td>
                     </tr>
                 )
             }
