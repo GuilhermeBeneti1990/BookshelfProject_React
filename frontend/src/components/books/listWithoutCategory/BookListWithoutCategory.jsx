@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import '../list/BooksList.css'
 
 import { baseURL, orderBy } from '../../../util/helper'
@@ -13,12 +12,6 @@ const initialState = {
 
 export default class BooksListWithoutCategory extends Component {
     state = { ...initialState }
-
-    componentWillMount() {
-        axios(baseURL() + "/books").then(resp => {
-            this.setState({ list: resp.data })
-        })
-    }
 
     orderBy() {
         if(this.state.orderAsc) {
