@@ -32,9 +32,6 @@ class BooksList extends Component {
             this.props.setListOfBook(resp.data)
             this.props.setListOfBookWithoutCategory(resp.data.filter(b => b.category == ""))
         })
-        await axios(baseURL() + "/categories").then(resp => {
-            this.props.setCategories(resp.data)
-        })
     }
 
     async save() {
