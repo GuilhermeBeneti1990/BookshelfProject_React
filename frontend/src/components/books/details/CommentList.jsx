@@ -24,6 +24,7 @@ class CommentList extends Component {
     state = { ...initialState }
 
     async componentDidMount() {
+        this.props.setCommentList([])
         await axios(baseURL() + "/comments").then(resp => {
             var comments = []
             for(let i = 0; i < resp.data.length; i ++) {
