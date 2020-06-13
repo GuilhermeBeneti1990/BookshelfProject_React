@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import './BookDetail.css'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { setBook, setComment, setCommentList } from '../../../actions/index'
+import { setBook, setComment, setCommentList, setEditingComment } from '../../../actions/index'
 
 import { date, baseURL } from '../../../util/helper'
 import { showAlert } from '../../errorOrSuccess/errorOrSuccess'
@@ -16,12 +16,16 @@ const headerProps = {
 }
 
 const initialState = {
-    comment: {id: '', author: '', body: '', timestamp: '', deleted: false},
-    editing: false
+    comment: {id: '', author: '', body: '', timestamp: '', deleted: false}
 }
 
 class CommentForm extends Component {
     state = { ...initialState }
+
+    componentWillMount() {
+        this.props.setComment(initialState.comment)
+        this.props.setEditingComment(false)
+    }
 
     updateField(event) {
         var comment = { ...this.props.comment }
@@ -31,7 +35,7 @@ class CommentForm extends Component {
 
     clear() {
         this.props.setComment(initialState.comment)
-        this.setState({ editing: false })
+        this.props.setEditingComment(true)
     }
 
     async save() {
@@ -81,7 +85,7 @@ class CommentForm extends Component {
                     <button className="btn btn-info" onClick={ e => this.save(e) }>
                             <i className="fa fa-send"></i>  Send
                         </button>
-                        {this.state.editing ?
+                        {this.props.editing ?
                         <button className="btn btn-danger ml-2" onClick={ e => this.clear(e) }>
                             Cancel
                         </button>
@@ -96,12 +100,14 @@ class CommentForm extends Component {
 const mapStateToProps = store => ({
     book: store.bookState.book,
     comment: store.commentState.comment,
-    list: store.commentState.list
+    list: store.commentState.list,
+    editing: store.commentState.editing
 })
 const mapDispatchToProps = dispatch => bindActionCreators({
     setBook,
     setComment,
-    setCommentList }, dispatch)
+    setCommentList,
+    setEditingComment }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentForm)
 

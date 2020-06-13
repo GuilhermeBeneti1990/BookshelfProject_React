@@ -1,6 +1,41 @@
 {
   "books": [
-   
+    {
+      "id": 1,
+      "title": "A Arte de Lavar Pratos",
+      "description": "My Book",
+      "author": "Guilherme Beneti",
+      "timestamp": "",
+      "category": "read",
+      "deleted": false
+    },
+    {
+      "id": 2,
+      "title": "A Sutil Arte de Ligar o Foda-se",
+      "description": "A really funny book and very good one",
+      "author": "Mark Hudson",
+      "timestamp": "",
+      "category": "reading",
+      "deleted": false
+    },
+    {
+      "id": 3,
+      "title": "A Cabana",
+      "description": "A good book and a incredible spiritual learning.",
+      "author": "Wlliam P. Young",
+      "timestamp": "",
+      "category": "read",
+      "deleted": false
+    },
+    {
+      "id": 4,
+      "title": "Assassin's Creed: Renascença",
+      "description": "A really good book based on a game or a game based on this book?",
+      "author": "Oliver Browden",
+      "timestamp": "",
+      "category": "",
+      "deleted": false
+    }
   ],
   "categories": [
     "",
@@ -9,6 +44,21 @@
     "read"
   ],
   "comments": [
-    
+    {
+      "timestamp": "13/06/2020 17:31",
+      "author": "Guilherme Beneti",
+      "body": "I want to read this book soon, I'm very excited about it!",
+      "parentId": "4",
+      "id": 1,
+      "deleted": false
+    },
+    {
+      "timestamp": "13/06/2020 17:31",
+      "author": "Mark Hudson",
+      "body": "It's a good one, good job Mr. Guilherme.",
+      "parentId": "1",
+      "id": 2,
+      "deleted": false
+    }
   ]
 }

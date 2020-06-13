@@ -40,3 +40,8 @@ export const setCommentList = value => ({
   type: 'SET_COMMENT_LIST',
   payload: value
 })
+
+export const setEditingComment = value => ({
+  type: 'SET_EDITING_COMMENT',
+  payload: value
+})

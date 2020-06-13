@@ -7,7 +7,8 @@ const initialState = {
         timestamp: '',
         deleted: false
     },
-    list: []
+    list: [],
+    editing: false
   }
 
   export const commentReducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const initialState = {
           ...state,
           list: action.payload
         }
+        case 'SET_EDITING_COMMENT':
+          return {
+            ...state,
+            editing: action.payload
+          }
       default:
         return state
     }

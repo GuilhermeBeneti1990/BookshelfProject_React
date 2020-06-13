@@ -5,7 +5,7 @@ import './BookDetail.css'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { setBook, setComment, setCommentList } from '../../../actions/index'
+import { setBook, setComment, setCommentList, setEditingComment } from '../../../actions/index'
 
 import { date, baseURL } from '../../../util/helper'
 import { showAlert, showCompleteAlert } from '../../errorOrSuccess/errorOrSuccess'
@@ -17,7 +17,6 @@ const headerProps = {
 }
 
 const initialState = {
-    editing: false,
     noComment: ''
 }
 
@@ -25,6 +24,7 @@ class CommentList extends Component {
     state = { ...initialState }
 
     async componentWillMount() {
+        this.props.setCommentList([])
         await axios(baseURL() + "/comments").then(resp => {
             var comments = []
             for(let i = 0; i < resp.data.length; i ++) {
@@ -42,7 +42,7 @@ class CommentList extends Component {
 
     load(comment) {
         this.props.setComment(comment)
-        this.setState({ editing: true })
+        this.props.setEditingComment(true)
     }
 
     remove(comment) {
@@ -61,7 +61,7 @@ class CommentList extends Component {
                     showAlert('success', 'Comment deleted!')
                     .then((result) => {
                         if(result.value) {
-                            window.location.reload(false);
+                            window.location.reload(false)
                         }
                     })
                 })
@@ -103,12 +103,13 @@ class CommentList extends Component {
 const mapStateToProps = store => ({
     book: store.bookState.book,
     comment: store.commentState.comment,
-    list: store.commentState.list
+    list: store.commentState.list,
 })
 const mapDispatchToProps = dispatch => bindActionCreators({
     setBook,
     setComment,
-    setCommentList }, dispatch)
+    setCommentList,
+    setEditingComment }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentList)
 
